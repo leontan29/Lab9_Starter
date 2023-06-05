@@ -2,10 +2,18 @@
 <html lang="en">
 
 <head>
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+	token: "9e5eafad9f6648e19111ed694cd6c360"
+	// for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lab 9</title>
+                        
 
   <style>
     button {
@@ -90,18 +98,184 @@
   <script>
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
-      e.preventDefault();
-      let output = document.querySelector('output');
-      let firstNum = document.querySelector('#first-num').value;
-      let secondNum = document.querySelector('#second-num').value;
-      let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+	e.preventDefault();
+	let output = document.querySelector('output');
+	let firstNum = document.querySelector('#first-num').value;
+	let secondNum = document.querySelector('#second-num').value;
+	let operator = document.querySelector('#operator').value;
+	output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
     });
 
-    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+    function console_log_clicked(ev) {
+	console.log("Console Log: time now is " + Date.now());
+    }
 
+    function console_error_clicked(ev) {
+	console.error(ev);
+    }
+
+    function console_count_clicked(ev) {
+	console.count('x');
+    }
+
+    function console_warn_clicked(ev) {
+	console.warn(ev);
+    }
+
+    function console_assert_clicked(ev) {
+	console.assert(1 == 1, 'ok');
+	console.assert(1 == 2, 'assert(1 == 2) failed');
+    }
+
+    function console_clear_clicked(ev) {
+	console.clear();
+    }
+
+    function console_dir_clicked(ev) {
+	console.dir(document.body);
+    }
+
+    function console_dirxml_clicked(ev) {
+	console.dirxml(document.body);
+    }
+
+    function console_group_start_clicked(ev) {
+	console.group('group');
+    }
+    
+    function console_group_end_clicked(ev) {
+	console.groupEnd('group');
+    }
+
+    function console_table_clicked(ev) {
+	const painters = [
+	    {
+		name: "Leonardo da Vinci",
+		famousPainting: "Mona Lisa",
+		yearOfDeath: 1519
+	    },
+	    {
+		name: "Vincent van Gogh",
+		famousPainting: "Starry Night",
+		yearOfDeath: 1890
+	    },
+	    {
+		name: "Pablo Picasso",
+		famousPainting: "Guernica",
+		yearOfDeath: 1973
+	    },
+	];
+	console.table(painters);
+    }
+
+    function start_timer_clicked(ev) {
+	console.log('timer started');
+	console.time();
+    };
+
+    function end_timer_clicked(ev) {
+	console.timeEnd();
+    }
+
+    function console_trace_clicked(ev) {
+	function baz() {
+	    console.trace();
+	}
+	function bar() {
+	    baz();
+	}
+	function foo() {
+	    bar();
+	}
+	console.log('triggering a call to foo(bar(baz()))');
+	foo();
+    }
+
+
+    function trigger_a_global_error_clicked(ev) {
+
+	class WayTooOldError extends Error {
+	    constructor(message) {
+		super(message);
+		this.name = 'WayTooOldError';
+	    }
+	}
+
+	function assert_is_minor(x) {
+	    if (x >= 30) {
+		throw new WayTooOldError('Way too old to be a minor');
+	    }
+	    if (x >= 18) {
+		throw new RangeError('Too old for to be a minor');
+	    }
+	}
+
+	function check_if_minor(x) {
+	    let ret = 1;
+	    try {
+		assert_is_minor(x);
+	    } catch (error) {
+		console.log(`assert_is_minor(${x}) throws an error: `);
+		console.error(error);
+		ret = 0;
+	    } finally {
+		console.log(`finally return ${ret}`);
+	    }
+	}
+
+	check_if_minor(29);
+	check_if_minor(50);
+
+	console.log('triggering a global TypeError');
+	let number = 42;
+	number(); 
+    }
+    
+    
+    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+    
+    onerror = (event, source, lineno, colno, error) => {
+	console.log("error");
+    };
+    
     // Start your code here
     // You may move this JS to another file if you wish
+    for (let i = 0; i < errorBtns.length; i++) {
+	let btn = errorBtns[i];
+	let txt = btn.textContent;
+	if (txt == 'Console Log') {
+	    btn.addEventListener('click', console_log_clicked);
+	} else if (txt == 'Console Error') {
+	    btn.addEventListener('click', console_error_clicked);
+	} else if (txt == 'Console Count') {
+	    btn.addEventListener('click', console_count_clicked);
+	} else if (txt == 'Console Warn') {
+	    btn.addEventListener('click', console_warn_clicked);
+	} else if (txt == 'Console Assert') {
+	    btn.addEventListener('click', console_assert_clicked);
+	} else if (txt == 'Console Clear') {
+	    btn.addEventListener('click', console_clear_clicked);
+	} else if (txt == 'Console Dir') {
+	    btn.addEventListener('click', console_dir_clicked);
+	} else if (txt == 'Console dirxml') {
+	    btn.addEventListener('click', console_dirxml_clicked);
+	} else if (txt == 'Console Group Start') {
+	    btn.addEventListener('click', console_group_start_clicked);
+	} else if (txt == 'Console Group End') {
+	    btn.addEventListener('click', console_group_end_clicked);
+	} else if (txt == 'Console Table') {
+	    btn.addEventListener('click', console_table_clicked);
+	} else if (txt == 'Start Timer') {
+	    btn.addEventListener('click', start_timer_clicked);
+	} else if (txt == 'End Timer') {
+	    btn.addEventListener('click', end_timer_clicked);
+	} else if (txt == 'Console Trace') {
+	    btn.addEventListener('click', console_trace_clicked);
+	} else if (txt == 'Trigger a Global Error') {
+	    btn.addEventListener('click', trigger_a_global_error_clicked);
+	}
+    }
+    
   </script>
 </body>
 
