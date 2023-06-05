@@ -6,7 +6,7 @@ Team Member: Leon Tan.
 
 I am doing this on my own.
 
-- [Live Page](./index.html)
+- [Live Page](https://leontan29.github.io/Lab9_Starter/)
 
 ## Screenshots
 
